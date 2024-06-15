@@ -138,7 +138,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\EstudanteController.cs" />
     <Compile Include="Controllers\FuncionariosController.cs" />
+    <Compile Include="Controllers\ProfessorController.cs" />
     <Compile Include="FormPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +149,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Model\Funcionario.cs" />
+    <Compile Include="Views\EstudanteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\EstudanteForm.Designer.cs">
+      <DependentUpon>EstudanteForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\FuncionarioForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +175,12 @@
     <Compile Include="Model\Utilizador.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\ProfessorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\ProfessorForm.Designer.cs">
+      <DependentUpon>ProfessorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="_iCantina_Model_CantinaContextDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -174,6 +188,9 @@
     </Compile>
     <EmbeddedResource Include="FormPrincipal.resx">
       <DependentUpon>FormPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\EstudanteForm.resx">
+      <DependentUpon>EstudanteForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\FuncionarioForm.resx">
       <DependentUpon>FuncionarioForm.cs</DependentUpon>
@@ -188,6 +205,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\ProfessorForm.resx">
+      <DependentUpon>ProfessorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

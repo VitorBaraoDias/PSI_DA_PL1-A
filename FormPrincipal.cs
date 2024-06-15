@@ -1,4 +1,6 @@
-﻿using iCantina.Model;
+﻿using iCantina.Controllers;
+using iCantina.Model;
+using iCantina.Views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,7 +27,13 @@ namespace iCantina
             InitializeComponent();
 
             dicionario.Add("Funcionários", new FuncionarioForm(db));
-            
+            dicionario.Add("Estudantes", new EstudanteForm(db));
+            dicionario.Add("Professores", new ProfessorForm(db));
+
+            FuncionariosController funcionariosController = new FuncionariosController(db);
+
+            dropFuncionario.DataSource = funcionariosController.obterListaFuncionarios();
+
         }
 
 
@@ -35,7 +43,6 @@ namespace iCantina
         {
 
             Form formSelect = dicionario[((Control)sender).Text];
-
 
             containerPai.Controls.Clear();
             formSelect.MdiParent = this;

@@ -28,21 +28,23 @@ namespace iCantina.Controllers
                 }
         }
 
-        internal void editarFuncionario(Funcionario funcionario, string nomeFuncionario, int nifFuncionario, string usernameFuncionario)
+        internal void editarFuncionario(Funcionario funcionario, Funcionario funcionarioNovo)
         {
 
-            funcionario.Nome = nomeFuncionario;
-            funcionario.NIF = nifFuncionario;
-            funcionario.Username = usernameFuncionario;
 
-            if (funcionario != null)
+            var funcionarioSelect = db.Funcionarios.Find(funcionario.Id);
+
+            if (funcionarioSelect != null)
             {
-                db.Funcionarios.Add(funcionario);
+                // Atualize as propriedades do objeto existente
+                funcionarioSelect.Nome = funcionarioNovo.Nome;
+                funcionarioSelect.NIF = funcionarioNovo.NIF;
+                funcionarioSelect.Username = funcionarioNovo.Username;
+
+                // Salve as alterações no contexto
                 db.SaveChanges();
             }
         }
-
-
 
         internal List<Funcionario> obterListaFuncionarios()
         {
@@ -51,5 +53,22 @@ namespace iCantina.Controllers
             return listaFuncionarios;
             
         }
+        internal void eliminarFuncionario(Funcionario funcionario)
+        {
+            if (funcionario != null)
+            {
+                var funcionarioSelect = db.Funcionarios.Find(funcionario.Id);
+
+                if (funcionarioSelect != null)
+                {
+                    // Remova a entidade do contexto
+                    db.Funcionarios.Remove(funcionarioSelect);
+
+                    // Salve as alterações no contexto
+                    db.SaveChanges();
+                }
+            }
+        }
+
     }
 }

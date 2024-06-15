@@ -10,5 +10,11 @@ namespace iCantina.Model
     {
 
         public string Username { get; set; }
+
+
+        public override string ToString()
+        {
+            return Username + "," + NIF;
+        }
     }
 }
