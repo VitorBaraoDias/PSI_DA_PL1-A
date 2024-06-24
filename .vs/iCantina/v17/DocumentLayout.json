@@ -1,0 +1,103 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\tomas\\Desktop\\iCantina\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|c:\\users\\tomas\\desktop\\icantina\\icantina\\views\\estudanteform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|solutionrelative:icantina\\views\\estudanteform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|C:\\Users\\tomas\\Desktop\\iCantina\\icantina\\views\\funcionarioform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|solutionrelative:icantina\\views\\funcionarioform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|C:\\Users\\tomas\\Desktop\\iCantina\\icantina\\views\\funcionarioform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|solutionrelative:icantina\\views\\funcionarioform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|C:\\Users\\tomas\\Desktop\\iCantina\\icantina\\views\\homeform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|solutionrelative:icantina\\views\\homeform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|C:\\Users\\tomas\\Desktop\\iCantina\\icantina\\model\\extra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BB7C2E08-5839-408E-B967-52DC55E70BE7}|iCantina\\iCantina.csproj|solutionrelative:icantina\\model\\extra.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Extra.cs",
+              "DocumentMoniker": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Model\\Extra.cs",
+              "RelativeDocumentMoniker": "iCantina\\Model\\Extra.cs",
+              "ToolTip": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Model\\Extra.cs",
+              "RelativeToolTip": "iCantina\\Model\\Extra.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-15T18:06:09.89Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "EstudanteForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\EstudanteForm.cs",
+              "RelativeDocumentMoniker": "iCantina\\Views\\EstudanteForm.cs",
+              "ToolTip": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\EstudanteForm.cs [Design]",
+              "RelativeToolTip": "iCantina\\Views\\EstudanteForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-19T16:17:50.807Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FuncionarioForm.cs",
+              "DocumentMoniker": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\FuncionarioForm.cs",
+              "RelativeDocumentMoniker": "iCantina\\Views\\FuncionarioForm.cs",
+              "ToolTip": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\FuncionarioForm.cs",
+              "RelativeToolTip": "iCantina\\Views\\FuncionarioForm.cs",
+              "ViewState": "AQIAAKUAAAAAAAAAAAAuwLoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-19T16:16:30.292Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FuncionarioForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\FuncionarioForm.cs",
+              "RelativeDocumentMoniker": "iCantina\\Views\\FuncionarioForm.cs",
+              "ToolTip": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\FuncionarioForm.cs [Design]",
+              "RelativeToolTip": "iCantina\\Views\\FuncionarioForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-19T16:16:21.492Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "HomeForm.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\HomeForm.cs",
+              "RelativeDocumentMoniker": "iCantina\\Views\\HomeForm.cs",
+              "ToolTip": "C:\\Users\\tomas\\Desktop\\iCantina\\iCantina\\Views\\HomeForm.cs [Design]",
+              "RelativeToolTip": "iCantina\\Views\\HomeForm.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-15T17:42:04.582Z",
+              "EditorCaption": " [Design]"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
