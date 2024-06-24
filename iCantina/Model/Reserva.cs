@@ -15,7 +15,6 @@ namespace iCantina.Model
         public List<Extra> Extras { get; set; }
 
         public Multa Multa { get; set; } 
-        //public bool estado { get; set; }
-       
+        public bool estado { get; set; }
     }
 }

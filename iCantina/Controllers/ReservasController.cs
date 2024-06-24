@@ -17,7 +17,7 @@ namespace iCantina.Controllers
             this.db = db;
         }
 
-        internal void inserirReservas(Cliente cliente, Menu menu, Prato prato, List<Extra> extras, Multa multa)
+        internal Reserva inserirReservas(Cliente cliente, Menu menu, Prato prato, List<Extra> extras, Multa multa)
         {
 
            
@@ -28,7 +28,53 @@ namespace iCantina.Controllers
                 db.Reservas.Add(reserva);
                 db.SaveChanges();
             }
+            return reserva;
         }
+        internal void editarReserva_para_Efetuada(Reserva reserva, Reserva reservanova)
+        {
+
+
+            var reservaSelect = db.Reservas.Find(reserva.Id);
+
+            if (reservaSelect != null)
+            {
+
+                reservaSelect = reservanova;
+                // Salve as alterações no contexto
+                db.SaveChanges();
+            }
+        }
+
+        internal List<Reserva> obterReservasEfetuadas()
+        {
+            List<Reserva> reservaList = new List<Reserva>();
+            foreach (Reserva reserva in db.Reservas.Include(c => c.Cliente))
+            {
+                if (reserva.estado)
+                {
+                   reservaList.Add(reserva);    
+                }
+            }
+
+            return reservaList;
+                         
+        }
+
+        internal List<Reserva> obterReservasNaoEfetuadas()
+        {
+            List<Reserva> reservaList = new List<Reserva>();
+            foreach (Reserva reserva in db.Reservas.Include(c => c.Cliente))
+            {
+                if (!reserva.estado)
+                {
+                    reservaList.Add(reserva);
+                }
+            }
+
+            return reservaList;
+        }
+
+
         internal List<Reserva> obterListaReservas()
         {
 

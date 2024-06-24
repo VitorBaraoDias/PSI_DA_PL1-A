@@ -1,15 +1,17 @@
 ﻿using iCantina.Controllers;
 using iCantina.Model;
+using iText.IO.Font.Constants;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.UI;
 using System.Windows.Forms;
 using Menu = iCantina.Model.Menu;
 
@@ -27,7 +29,8 @@ namespace iCantina.Views
         ProfessorController professorController;
         ReservasController reservasController;
         MultaController multaController;
-        
+        FaturaController faturaController;
+
 
         //menu
         Menu menu;
@@ -40,6 +43,7 @@ namespace iCantina.Views
             professorController = new ProfessorController(db);
             reservasController = new ReservasController(db);
             multaController = new MultaController(db);
+            faturaController = new FaturaController(db);
 
         }
 
@@ -76,7 +80,7 @@ namespace iCantina.Views
 
                 // Aqui você pode adicionar a lógica desejada, por exemplo, exibir detalhes do menu
                 Menu menuSelecionado = menuList.FirstOrDefault(menu => menu.DataHora.Date == selectedDate.Date);
-                if (menuSelecionado != null && menuSelecionado.QtdDisponivel>0 && DateTime.Now.Date <= menuSelecionado.DataHora.Date)
+                if (menuSelecionado != null && menuSelecionado.QtdDisponivel > 0 && DateTime.Now.Date <= menuSelecionado.DataHora.Date)
                 {
                     // Exibir detalhes do menu selecionado
                     ExibirDetalhesMenu(menuSelecionado);
@@ -152,7 +156,7 @@ namespace iCantina.Views
         private void comboClientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             Cliente cliente = (Cliente)comboClientes.SelectedItem;
-            lblSaldo.Visible = true; 
+            lblSaldo.Visible = true;
             lblSaldo.Text = "Saldo do cliente: " + cliente.Saldo.ToString() + "€";
         }
 
@@ -164,9 +168,9 @@ namespace iCantina.Views
 
         private void btnInserir_Click(object sender, EventArgs e)
         {
-            
+
             //so consegue realizar a reserva se for no proprio dia ou em dias anteriores
-            if (DateTime.Now.Date <=   menu.DataHora.Date)
+            if (DateTime.Now.Date <= menu.DataHora.Date)
             {
                 if (CheckComboBox(comboPrato) && CheckComboBox(comboTipoCliente) && CheckComboBox(comboClientes))
                 {
@@ -174,7 +178,7 @@ namespace iCantina.Views
 
                     if (!reservasController.verificarReservaCliente(cliente, menu))
                     {
-                       processarReserva(cliente);
+                        processarReserva(cliente);
                     }
                     else
                     {
@@ -201,9 +205,12 @@ namespace iCantina.Views
                 List<Extra> extras = comboExtrasSelect.Items.OfType<Extra>().ToList();
                 Multa multa = getMulta();
 
-                reservasController.inserirReservas(cliente, menu, prato, extras, multa);
-                Menu menuAtualizado = updateQuantidateExtras_Prato(menu, extras);
-                updateSaldo_gerarTalao(cliente,  menuAtualizado,  prato, extras, multa); //somar com a multa
+                Reserva reserva =  reservasController.inserirReservas(cliente, menu, prato, extras, multa);
+                Menu menuAtualizado = updateQuantidateExtras_Prato(reserva.Menu, reserva.Extras);
+                updateSaldo_gerarTalao(cliente, menuAtualizado, prato, extras, multa);
+
+                //gearfatura
+                generatePdf(faturaController.inserirFatura(reserva, getPrecoTotalReserva(reserva)));
 
                 clearText();
                 MessageBox.Show("Reserva efetuada!");
@@ -232,58 +239,72 @@ namespace iCantina.Views
 
             return menuAtualizado;
         }
-        private void updateSaldo_gerarTalao(Cliente cliente, Menu menuAtualizado, Prato prato, List<Extra> extras,Multa multa)
+        private void updateSaldo_gerarTalao(Cliente cliente, Menu menuAtualizado, Prato prato, List<Extra> extras, Multa multa)
         {
             float precoExtras = extras.Sum(q => q.Preco);
             float valorMulta = 0;
-            
-            if(multa != null)
+
+            if (multa != null)
             {
                 valorMulta = multa.Valor;
             }
             if (comboTipoCliente.SelectedItem.ToString() == "Professor")
             {
                 updateProfessorSaldo(menuAtualizado, precoExtras, multa);
-                gerarTalao(cliente, "Professor", menuAtualizado, prato, extras, (menuAtualizado.PrecoProfessor + precoExtras + multa.Valor), multa);
+                gerarTalao(cliente, "Professor", menuAtualizado, prato, extras, (menuAtualizado.PrecoProfessor + precoExtras + valorMulta), valorMulta);
             }
             else if (comboTipoCliente.SelectedItem.ToString() == "Estudante")
             {
                 updateEstudanteSaldo(menuAtualizado, precoExtras, multa);
-                gerarTalao(cliente, "Estudante", menuAtualizado, prato, extras, (menuAtualizado.PrecoEstudante + precoExtras + multa.Valor), multa);
+                gerarTalao(cliente, "Estudante", menuAtualizado, prato, extras, (menuAtualizado.PrecoEstudante + precoExtras + valorMulta), valorMulta);
 
             }
         }
         private void updateProfessorSaldo(Menu menuAtualizado, float precoExtras, Multa multa)
         {
+            float valorMulta = 0;
+
+            if (multa != null)
+            {
+                valorMulta = multa.Valor;
+            }
             Professor professor = (Professor)comboClientes.SelectedItem;
-            professor.Saldo -= (menuAtualizado.PrecoProfessor + precoExtras + multa.Valor);
+            professor.Saldo -= (menuAtualizado.PrecoProfessor + precoExtras + valorMulta);
             professorController.editarProfessor(professor, professor);
         }
 
         private void updateEstudanteSaldo(Menu menuAtualizado, float precoExtras, Multa multa)
         {
+            float valorMulta = 0;
+
+            if (multa != null)
+            {
+                valorMulta = multa.Valor;
+            }
+
             Estudante estudante = (Estudante)comboClientes.SelectedItem;
-            estudante.Saldo -= (menuAtualizado.PrecoEstudante + precoExtras + multa.Valor);
+            estudante.Saldo -= (menuAtualizado.PrecoEstudante + precoExtras + valorMulta);
             estudanteController.editarEstudante(estudante, estudante);
         }
         private void btnAddExtras_Click(object sender, EventArgs e)
-        {            
-                //so pode inserir se o extra for menor ou igual há quantidade disponivel e enquanto tiver selecioado menos de 3 extras
-                if (comboExtras.Text != "" && comboExtrasSelect.Items.Count < 3)
-                {
-                    QuantidadeExtra quantidadeExtra = new QuantidadeExtra { Quantidade = 1, Extra = ((QuantidadeExtra)comboExtras.SelectedItem).Extra };
+        {
+            //so pode inserir se o extra for menor ou igual há quantidade disponivel e enquanto tiver selecioado menos de 3 extras
+            if (comboExtras.Text != "" && comboExtrasSelect.Items.Count < 3)
+            {
+                QuantidadeExtra quantidadeExtra = new QuantidadeExtra { Quantidade = 1, Extra = ((QuantidadeExtra)comboExtras.SelectedItem).Extra };
 
-                    if (!comboExtrasSelect.Items.Contains(quantidadeExtra.Extra)){
-                        comboExtrasSelect.Items.Add(quantidadeExtra.Extra);
-                        comboExtrasSelect.SelectedItem = quantidadeExtra.Extra;
-                    }
-                   
+                if (!comboExtrasSelect.Items.Contains(quantidadeExtra.Extra))
+                {
+                    comboExtrasSelect.Items.Add(quantidadeExtra.Extra);
+                    comboExtrasSelect.SelectedItem = quantidadeExtra.Extra;
                 }
-                else
-                {
-                    MessageBox.Show("Não pode exceder os extras possíveis!");
 
-                }      
+            }
+            else
+            {
+                MessageBox.Show("Não pode exceder os extras possíveis!");
+
+            }
         }
         private void btnRemoveExtra_Click(object sender, EventArgs e)
         {
@@ -340,31 +361,89 @@ namespace iCantina.Views
 
         //ficheiros
 
-        private void gerarTalao(Cliente cliente, string tipoCliente, Menu menuAtualizado, Prato prato, List<Extra> extras, float total, Multa multa)
+        private void gerarTalao(Cliente cliente, string tipoCliente, Menu menuAtualizado, Prato prato, List<Extra> extras, float total, float valorMulta)
         {
-            string nomeFicheiro = "Talao_" +cliente.Nome+"_"+DateTime.Now.ToString("yyyy-MM-dd") +".txt";
+            string nomeFicheiro = "Talao_" + cliente.Nome + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
             //enviar para area de trabalho
             string caminhoFicheiro = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), nomeFicheiro);
 
             using (StreamWriter sw = new StreamWriter(caminhoFicheiro))
             {
                 sw.WriteLine("-------- Talão de Reserva --------");
-                sw.WriteLine("Cliente:"+ cliente.Nome);
+                sw.WriteLine("Cliente:" + cliente.Nome);
                 sw.WriteLine("Tipo:" + tipoCliente);
-                sw.WriteLine("Menu:"+ menu.Id);
-                sw.WriteLine("Data e Hora:"+ menu.DataHora);
-                sw.WriteLine("Prato: "+prato.Descricao);
+                sw.WriteLine("Menu:" + menu.Id);
+                sw.WriteLine("Data e Hora:" + menu.DataHora);
+                sw.WriteLine("Prato: " + prato.Descricao);
                 sw.WriteLine("Extras:");
-                sw.WriteLine("Valor da multa:" + multa.Valor);
+                sw.WriteLine("Valor da multa:" + valorMulta);
 
                 foreach (var extra in extras)
                 {
-                    sw.WriteLine(" - "+ extra.Descricao);
+                    sw.WriteLine(" - " + extra.Descricao);
                 }
                 sw.WriteLine("----------------------------------");
                 sw.WriteLine($"Total: " + total);
             }
             MessageBox.Show("Talão salvo em:" + caminhoFicheiro);
+        } 
+        private void generatePdf(Fatura fatura)
+        {
+            string nomeFicheiro = "reserva_" + fatura.Cliente.Nome + "_" + DateTime.Now.ToString("yyyy-MM-dd") + ".pdf";
+            string caminhoFicheiro = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), nomeFicheiro);
+
+            // Cria um novo documento PDF
+            PdfDocument pdfDocument = new PdfDocument(new PdfWriter(caminhoFicheiro));
+            Document document = new Document(pdfDocument);
+            PdfFont titleFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA_BOLD);
+            PdfFont normalFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA);
+
+            Paragraph title = new Paragraph("Detalhes da Reserva").SetFont(titleFont).SetFontSize(18).SetTextAlignment(TextAlignment.CENTER);
+            document.Add(title);
+
+            Paragraph cliente = new Paragraph("Cliente: " + fatura.Cliente.Nome).SetFont(titleFont).SetFontSize(18).SetTextAlignment(TextAlignment.CENTER);
+            document.Add(cliente); 
+
+            foreach (ItemFatura itemFatura in fatura.ItemsFatura)
+            {
+                Paragraph detalhes = new Paragraph(itemFatura.Descricao + " " + itemFatura.Preco + "€")
+                .SetFont(normalFont)
+                .SetFontSize(12);
+                document.Add(detalhes);
+            }
+
+            Paragraph detalhesFinais = new Paragraph("Total: " + fatura.Total + "€").SetFont(normalFont).SetFontSize(12);
+            document.Add(detalhesFinais);
+
+            document.Close();
+            MessageBox.Show("Detalhes da reserva foi guardada em pdf no caminho!" + caminhoFicheiro);
+
         }
+        
+        //funcao aux
+
+        private float getPrecoTotalReserva(Reserva reserva){
+            float valorMulta = 0;
+            float precoTipoMenu = 0;
+            float precoExtras = reserva.Extras.Sum(q => q.Preco);
+
+            if (reserva.Multa != null)
+            {
+                valorMulta = reserva.Multa.Valor;
+            }
+            if (reserva.Cliente is Professor)
+            {
+                precoTipoMenu = menu.PrecoProfessor;
+            }
+            else if (reserva.Cliente is Estudante)
+            {
+                precoTipoMenu = menu.PrecoEstudante;
+            }
+
+            return precoTipoMenu + valorMulta + precoExtras;
+        }
+
+
     }
-    }
+}
+
